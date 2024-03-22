@@ -13,7 +13,11 @@
 </head>
 <body>
     <div class="container p-5 my-5 border">
-        <form action="user/signin" method="POST">
+        <form action="user/signup" method="POST">
+            <label for="name" class="form-label">Name</label>
+            <div class="form-outline mb-4">
+            <input type="text" id="text" name="username" class="form-control" required>
+            </div>
             <label for="email" class="form-label">Email</label>
             <div class="form-outline mb-4">
             <input type="email" id="email" name="email" class="form-control" required>
@@ -23,14 +27,14 @@
             <input type="password" name="password" id="password" class="form-control" required>
             </div>
             <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary">Signup</button>
             </div>
             <div class="hidden"></div>
-            <p class="text-center text-muted mt-3 mb-0">dont have an account?<a href="./signup.html"
-                class="fw-bold text-body">signup</a></p>
+            <p class="text-center text-muted mt-3 mb-0">Have already an account? <a href="../login/signin.html"
+                class="fw-bold text-body">Login here</a></p>
         </form>
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.js"></script>
-<script src="index1.js"></script>
+<script src="index.js"></script>
 </html>
