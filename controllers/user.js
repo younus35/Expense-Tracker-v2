@@ -1,41 +1,27 @@
 const User = require('../model/users');
 const bcrypt = require('bcrypt');
 
-exports.postUser = (req, res, next) =>{
+exports.postUser = async (req, res, next) =>{
+    try{
     const user = req.body.user;//here user is user in frontend signup index.js line 7
     const email = req.body.email;
     const password = req.body.password;
     const saltrounds = 10;
-    //create a promise for bcrypt
-    const hashPasswordPromise = new Promise((resolve, reject) => {
-        bcrypt.hash(password, saltrounds, (err, hash) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(hash);
-            }
-        });
-    });
-    hashPasswordPromise.then(hash =>{
-        User.create({
+    const hash = await bcrypt.hash(password, saltrounds);
+        const createdUser = await User.create({
             name: user,
             email: email,
             password: hash
         })
-        .then((user) =>{
-            res.json(user);
-        })
-        .catch(err => {
-            if(err.name === 'SequelizeUniqueConstraintError'){
-                res.json({message:'Email already exists'})
-            }else{
-            console.log(err)
-            }
-        });
-    })
-    .catch(err =>{
-        console.log(err);
-    })
+        res.json(createdUser);
+        }
+    catch(err){
+        if(err.name === 'SequelizeUniqueConstraintError'){
+            res.json({message:'Email already exists'})
+        }else{
+        console.log(err)
+        }
+    }
 }
 
 exports.checkUser = async (req, res, next) =>{
@@ -43,18 +29,8 @@ exports.checkUser = async (req, res, next) =>{
        const email = req.body.email;
        const password = req.body.password;
        const response = await User.findAll({where:{email}})//we can also write { email: email } but as both are same so we wrote it like that
-    //console.log(response);
        if(response.length > 0){
-        const comparePasswords = new Promise((resolve, reject) => {
-            bcrypt.compare(password, response[0].password, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-        const match = await comparePasswords;  
+        const match = await bcrypt.compare(password, response[0].password);  
            if(match){
             res.status(200).json({message:"User Logged In Successfully"});
            }
