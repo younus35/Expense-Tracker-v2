@@ -3,13 +3,14 @@ const details = document.querySelector('.expense_details');
 
 form.addEventListener('submit', async (event) =>{
     try{
+    const token = localStorage.getItem('token');
     event.preventDefault();
     let expense_details = {
         amount:event.target.amount.value,
         description:event.target.description.value,
         category:event.target.category.value
     };
-    const response = await axios.post("http://localhost:3000/expense/add-expense",expense_details);
+    const response = await axios.post("http://localhost:3000/expense/add-expense",expense_details,{headers:{"Authorization":token}});
     console.log(response);
     showExpenseOnScreen(response.data);
    }
@@ -19,9 +20,10 @@ form.addEventListener('submit', async (event) =>{
 })
 window.addEventListener('DOMContentLoaded', async ()=>{
     try{
-    const response = await axios.get("http://localhost:3000/expense/get-expenses")
+    const token = localStorage.getItem('token');
+    const response = await axios.get("http://localhost:3000/expense/get-expenses",{headers:{"Authorization":token}})
     for(var i=0; i<response.data.length; i++){
-         showExpenseOnScreen(response.data[0]);
+         showExpenseOnScreen(response.data[i]);
     }
    }
    catch(err){
@@ -38,7 +40,8 @@ function showExpenseOnScreen(expense_details){
     button.appendChild(buttont);
     button.onclick = async () =>{
        try{
-         await axios.delete(`http://localhost:3000/expense/delete-expense/${expense_details.id}`)
+        const token = localStorage.getItem('token');
+         await axios.delete(`http://localhost:3000/expense/delete-expense/${expense_details.id}`,{headers:{"Authorization":token}})
            details.removeChild(newli);
        }
        catch(err){

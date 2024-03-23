@@ -2,7 +2,7 @@ const Expense = require('../model/expenses');
 
 exports.getExpense = async (req, res, next)=>{
     try{
-         const expenses = await Expense.findAll();
+         const expenses = await Expense.findAll({where:{userId: req.user.id}});
          res.json(expenses);
     }
     catch(err){
@@ -17,7 +17,7 @@ exports.postExpense = async (req, res, next)=>{
        // const amount = req.body.amount;
        // const description = req.body.description;
        // const category = req.body.category;
-       const createdExpense = await Expense.create({amount,description,category})//propetry name and value name are same
+       const createdExpense = await Expense.create({amount,description,category,userId:req.user.id})//propetry name and value name are same
        res.json(createdExpense);
     }
     catch(err){

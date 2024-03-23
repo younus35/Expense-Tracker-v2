@@ -10,7 +10,8 @@ form.addEventListener('submit', async (event) =>{
        const response = await axios.post('http://localhost:3000/user/signin',login_details)
        if(response.status === 200){
           alert(response.data.message)
-          window.location.replace("../expense/expense.html")
+          localStorage.setItem('token', response.data.token);
+          window.location.href = "../expense/expense.html";
        }
     }
     catch(err){
