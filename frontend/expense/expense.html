@@ -11,6 +11,12 @@
      crossorigin="anonymous"></script>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Expense-Tracker</a>
+          <button class="btn btn-outline-success" type="submit" id="rzp-button">Buy Premium</button>
+        </div>
+      </nav> 
     <div class="container">
         <form>
             <label for="choose_expense_amount" class="form-label">Choose expense amount</label>
@@ -36,6 +42,7 @@
         </form>
         <ul class="expense_details"></ul>
     </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.js"></script>
     <script src="expense.js"></script>
 </body>
