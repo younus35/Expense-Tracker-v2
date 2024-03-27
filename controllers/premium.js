@@ -5,14 +5,16 @@ const sequelize = require('../util/database');
 
 exports.getUserLeaderBoard = async (req, res, next)=>{
     try{
+        if(req.user.ispremiumuser !== null){
+
         const userLeaderBoardDetails = await User.findAll({ //insted of findAll() where it gives all attributes use the below
-            attributes:['id', 'name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'total']],
-            include: [{
-                model: Expense,
-                attributes:[]
-            }],
-            group:['user.id'],
-            order:[['total','DESC']]
+            // attributes:['id', 'name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'total']],
+            // include: [{
+            //     model: Expense,
+            //     attributes:[]
+            // }],
+            // group:['user.id'],
+            order:[['totalExpenses','DESC']]
         });
         // const userTotalExpenses = await Expense.findAll({
         //     attributes: ['userId', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'total']],
@@ -32,10 +34,13 @@ exports.getUserLeaderBoard = async (req, res, next)=>{
         // users.forEach((user)=>{
         //      userLeaderBoardDetails.push({name:user.name, total:userTotalExpenses[user.id] || 0})
         // })
-        // console.log(userLeaderBoardDetails)
+        //console.log(userLeaderBoardDetails)
         // userLeaderBoardDetails.sort((a,b)=> b.total - a.total);
 
         res.status(200).json(userLeaderBoardDetails);
+    }else{
+        res.status(200).json({ispremiumuser:false})
+    }
     }
     catch(err){
         console.log(err);
