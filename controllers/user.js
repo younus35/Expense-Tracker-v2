@@ -25,8 +25,8 @@ exports.postUser = async (req, res, next) =>{
     }
 }
 
-function generateAccessToken(id){
-    return jwt.sign({userId:id}, '834100nanfa18xnus23346fejk202356ncxmvn8329834nndx90213n3j28fndskn871489hjnvz8y3tgsdf2a1gh654yfd')
+exports.generateAccessToken = (id, ispremiumuser)=>{
+    return jwt.sign({userId:id, ispremiumuser}, '834100nanfa18xnus23346fejk202356ncxmvn8329834nndx90213n3j28fndskn871489hjnvz8y3tgsdf2a1gh654yfd')
 }
 
 exports.checkUser = async (req, res, next) =>{
@@ -37,7 +37,7 @@ exports.checkUser = async (req, res, next) =>{
        if(response.length > 0){
         const match = await bcrypt.compare(password, response[0].password);  
            if(match){
-            res.status(200).json({message:"User Logged In Successfully",token:generateAccessToken(response[0].id)});
+            res.status(200).json({message:"User Logged In Successfully",token:exports.generateAccessToken(response[0].id, response[0].ispremiumuser)});
            }
            else{
             return res.status(401).json({message:"Password is Incorrect"});

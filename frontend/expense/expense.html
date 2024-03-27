@@ -11,10 +11,11 @@
      crossorigin="anonymous"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Expense-Tracker</a>
-          <button class="btn btn-outline-success" type="submit" id="rzp-button">Buy Premium</button>
+          <a class="navbar-brand" href="./expense.html">Expense-Tracker</a>
+          <a class="navbar-brand" href="../leaderboard/leaderboard.html">LeaderBoard</a>
+          <button class="btn btn-outline-success" type="button" id="rzp-button">Buy Premium</button>
         </div>
       </nav> 
     <div class="container">
@@ -40,7 +41,19 @@
             <button class="btn btn-primary mt-2" type="submit">Add Expense</button>
             </div>   
         </form>
-        <ul class="expense_details"></ul>
+        <table class="table table-bordered table-hover table-sm expense_details">
+            <thead>
+                <tr>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
     </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.js"></script>

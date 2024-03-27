@@ -12,6 +12,8 @@ form.addEventListener('submit', async (event) =>{
           alert(response.data.message)
           localStorage.setItem('token', response.data.token);
           window.location.href = "../expense/expense.html";
+       }else if(response.status === 401){
+        alert(response.data.message);
        }
     }
     catch(err){

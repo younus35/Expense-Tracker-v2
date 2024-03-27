@@ -1,5 +1,6 @@
 const Razorpay = require('razorpay');
 const Order = require('../model/orders');
+const userController = require('./user');
 
 exports.purchasepremium = async (req , res, next) =>{
    try{
@@ -12,6 +13,7 @@ exports.purchasepremium = async (req , res, next) =>{
         if(err) {
             throw new Error(JSON.stringify(err));
         }
+        //Order.create({orderid: order.id, status: 'PENDING',userId:req.user.id})
         req.user.createOrder({ orderid: order.id, status: 'PENDING'}).then(() => {
             return res.status(201).json({ order, key_id : rzp.key_id});
 
@@ -22,6 +24,7 @@ exports.purchasepremium = async (req , res, next) =>{
    }
    catch(err){
      console.log(err);
+     res.status(403).json({ message: 'Sometghing went wrong', error: err})
    }
 }
 
@@ -34,13 +37,13 @@ exports.updateTransactionStatus = async (req, res ) => {
         const promise2 =  req.user.update({ ispremiumuser: true }) 
 
         Promise.all([promise1, promise2]).then(()=> {
-            return res.status(202).json({sucess: true, message: "Transaction Successful", token: userController.generateAccessToken(userId,undefined , true) });
+            return res.status(202).json({sucess: true, message: "Transaction Successful", token: userController.generateAccessToken(userId, true)});
         }).catch((error ) => {
             throw new Error(error)
         })            
     } catch (err) {
         console.log(err);
-        res.status(403).json({ errpr: err, message: 'Sometghing went wrong' })
+        res.status(403).json({ error: err, message: 'Sometghing went wrong' ,token: userController.generateAccessToken(userId, false)})
 
     }
 }

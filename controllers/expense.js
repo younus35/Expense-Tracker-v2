@@ -3,7 +3,7 @@ const Expense = require('../model/expenses');
 exports.getExpense = async (req, res, next)=>{
     try{
          const expenses = await Expense.findAll({where:{userId: req.user.id}});
-         res.json(expenses);
+         res.json({expenses, ispremiumuser:req.user.ispremiumuser});
     }
     catch(err){
          console.log(err);

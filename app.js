@@ -6,21 +6,27 @@ const sequelize = require('./util/database');
 
 const User = require('./model/users');
 const Expense = require('./model/expenses');
+const Order = require('./model/orders');
 
 
 const app = express();
+
+const dotenv = require('dotenv');// to include the .env file
+dotenv.config();
+
 app.use(cors());
 
 const userRoutes = require('./routes/users')
 const expenseRoutes = require('./routes/expense')
 const purchaseRoutes = require('./routes/purchase');
-const Order = require('./model/orders');
+const premiumRoutes = require('./routes/premium');
 
 app.use(bodyParser.json({extended: false}));
 
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
+app.use('/premium', premiumRoutes);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
