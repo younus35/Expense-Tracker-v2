@@ -1,12 +1,12 @@
 const User = require('../model/users');
-const Expense = require('../model/expenses');
-const sequelize = require('../util/database');
+// const Expense = require('../model/expenses');
+// const sequelize = require('../util/database');
 
 
 exports.getUserLeaderBoard = async (req, res, next)=>{
+    // console.log(req.user.ispremiumuser)
     try{
-        if(req.user.ispremiumuser !== null){
-
+        // if(req.user.ispremiumuser == true){
         const userLeaderBoardDetails = await User.findAll({ //insted of findAll() where it gives all attributes use the below
             // attributes:['id', 'name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'total']],
             // include: [{
@@ -38,9 +38,9 @@ exports.getUserLeaderBoard = async (req, res, next)=>{
         // userLeaderBoardDetails.sort((a,b)=> b.total - a.total);
 
         res.status(200).json(userLeaderBoardDetails);
-    }else{
-        res.status(200).json({ispremiumuser:false})
-    }
+    // }else{
+        // res.status(401).json({ispremiumuser:false})
+    // }
     }
     catch(err){
         console.log(err);

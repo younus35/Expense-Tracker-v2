@@ -5,17 +5,11 @@ window.addEventListener('DOMContentLoaded', async ()=>{
        const token = localStorage.getItem('token');
        const response = await axios.get('http://localhost:3000/premium/show-leaderboard', {headers:{"Authorization":token}})
        const userLeaderBoardArray = response.data;
-       console.log(userLeaderBoardArray);
-       if(!userLeaderBoardArray.ispremiumuser){
-        alert('you are not a premium user');
-        window.location.href = "../expense/expense.html"
-       }
-       // console.log(response.data)
-       else{
+       //console.log(userLeaderBoardArray);
         userLeaderBoardArray.forEach((user) =>{
+            
             showUserLeaderBoard(user);
         })  
-      }
     }
     catch(err){
         console.log(err);

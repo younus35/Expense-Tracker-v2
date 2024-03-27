@@ -13,8 +13,8 @@ exports.getExpense = async (req, res, next)=>{
 }
 
 exports.postExpense = async (req, res, next)=>{
+    const t = await sequelize.transaction();
     try{
-        const t = await sequelize.transaction();
         const {amount,description,category} = req.body;
         // Equivalent to:
         // const amount = req.body.amount;
@@ -38,16 +38,18 @@ exports.postExpense = async (req, res, next)=>{
 }
 
 exports.deleteExpense = async (req, res, next)=>{
+    const t = await sequelize.transaction();
     try{
-      const t = await sequelize.transaction();
       const id = req.params.Id;
       const response = await Expense.findByPk(id);
+      const totalExpense = Number(req.user.totalExpenses) - Number(response.amount);
       await User.update({
-        totalExpenses: req.user.totalExpenses - response.amount
+        totalExpenses: totalExpense
       },{
         where:{id: req.user.id},
         transaction: t
       })
+      console.log(totalExpense);
       const destroyedItem = await response.destroy({where:{id: id, userId:req.user.id}, transaction: t});
       await t.commit();
       res.json(destroyedItem);
