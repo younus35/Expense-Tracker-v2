@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password Page</title>
+    <title>Reset Password Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
      crossorigin="anonymous">
@@ -13,20 +13,17 @@
 </head>
 <body>
     <div class="container p-5 my-5 border">
-        <form action="password/forgotpassword" method="POST">
-            <label for="email" class="form-label">Please Enter Your Registered Email</label>
+        <form action="password/updatepassword" method="POST">
+            <label for="password" class="form-label">Please Enter Your new Password</label>
             <div class="form-outline mb-4">
-            <input type="email" id="email" name="email" class="form-control" required>
+            <input type="password" id="password" name="password" class="form-control" required>
             </div>
             <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-primary">Send</button>
             </div>
-            <div class="hidden"></div>
-            <p class="text-center text-muted mt-3 mb-0">dont have an account?<a href="../signup/signup.html"
-                class="fw-bold text-body">signup</a></p>
         </form>
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.js"></script>
-<script src="forgotPass.js"></script>
+<script src="resetPass.js"></script>
 </html>

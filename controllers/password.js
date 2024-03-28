@@ -1,23 +1,36 @@
-const Sib = require('@getbrevo/brevo');
+const transporter = require('../util/nodemailer');
+const User = require('../model/users');
+const ResetPassword = require('../model/resetPassword');
+const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
 
 exports.forgotPassword = async (req, res, next) =>{
     try{
         const email = req.body.email;
-        
-        const transEmailApi = new Sib.TransactionalEmailsApi();
-        
-        const apiKey = transEmailApi.authentications["apiKey"];
-        apiKey.apiKey = process.env.BREVO_API_KEY;
-        
-        let sendSmtpEmail = new Sib.SendSmtpEmail();
+        const requestId = uuidv4();
 
-        sendSmtpEmail.subject = "Expense Tracker Reset Password";
-        sendSmtpEmail.htmlContent = "<html><body><h1>This is my first transactional email</h1></body></html>";
-        sendSmtpEmail.sender = {"email": "picwork35@gmail.com","name": "AFNAN",};
-        sendSmtpEmail.to = [{"email":email}];
+        const recepientEmail = await User.findOne({where:{email:email}});
+         console.log(recepientEmail.id);
     
-        await transEmailApi.sendTransacEmail(sendSmtpEmail);
-        return res.status(200).json({
+        if (!recepientEmail) {
+            return res
+              .status(404)
+              .json({ message: "Please provide the registered email!" });
+          }
+        
+        await ResetPassword.create({
+            id: requestId,
+            isActive: true,
+            userId: recepientEmail.id
+          });
+          
+          const info = await transporter.sendMail({
+            from: "picwork35@gmail.com",
+            to: email,
+            subject: "Expense Tracker Reset lINK",
+            html: `<p>Click <a href="http://localhost:3000/password/resetpassword/${requestId}">here</a> to reset your password.</p>`,
+          });
+        return res.status(202).json({
            message:
            "Link for reset the password is successfully send on your Mail Id!",
         });
@@ -25,5 +38,61 @@ exports.forgotPassword = async (req, res, next) =>{
     catch(err){
         console.log(err);
         return res.status(409).json({message: "failed to change password"})
+    }
+}
+
+exports.resetpassword = async (req, res) => {
+    try{
+        const id = req.params.resetpasswordid;
+        //console.log(id);
+        const forgotpasswordrequest = await ResetPassword.findOne({ where :{ id }})
+        if(forgotpasswordrequest){
+            if(forgotpasswordrequest.isActive){
+            forgotpasswordrequest.update({ isActive: false});
+           return res.status(200).send(`<html>
+                                    <script>
+                                        function formsubmitted(e){
+                                            e.preventDefault();
+                                            console.log('called')
+                                        }
+                                    </script>
+
+                                    <form action="/password/updatepassword/${id}" method="get">
+                                        <label for="newpassword">Enter New password</label>
+                                        <input name="newpassword" type="password" required></input>
+                                        <button>reset password</button>
+                                    </form>
+                                </html>`
+                                )
+        }else{
+            res.send({message: "this link is inactive now"});
+        }
+    }
+ }
+    catch(err) {
+        console.log(err);
+    }
+    
+}
+
+exports.updatePassword = async(req, res, next) =>{
+    try {
+        const { newpassword } = req.query;
+        const resetpasswordid  = req.params.id;
+        const userIdObj = await ResetPassword.findOne({ where : { id: resetpasswordid }, attributes: ["userId"],})
+        
+        const userInstance = await User.findOne({
+         where: { id: userIdObj.userId },
+        });
+        console.log(userInstance);
+        const hashedPsw = await bcrypt.hash(newpassword, 10);
+        
+        await userInstance.update({ password: hashedPsw });
+        res
+        .status(201)
+        .json({ message: "Successfully updated the password", success: true });
+           
+    } catch(error){
+        console.log(error);
     }
 }
