@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', async ()=>{
        const userLeaderBoardArray = response.data;
        //console.log(userLeaderBoardArray);
         userLeaderBoardArray.forEach((user) =>{
-            
+            //should add the code here to show only for premium users
             showUserLeaderBoard(user);
         })  
     }
