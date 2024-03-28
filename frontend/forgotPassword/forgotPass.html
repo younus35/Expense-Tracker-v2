@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign-in Page</title>
+    <title>Forgot Password Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
      crossorigin="anonymous">
@@ -13,26 +13,19 @@
 </head>
 <body>
     <div class="container p-5 my-5 border">
-        <form action="user/signin" method="POST">
-            <label for="email" class="form-label">Email</label>
+        <form action="password/forgotpassword" method="POST">
+            <label for="email" class="form-label">Please Enter Your Registered Email</label>
             <div class="form-outline mb-4">
             <input type="email" id="email" name="email" class="form-control" required>
             </div>
-            <label for="password" class="form-label">Password</label>
-            <div class="form-outline mb-4">
-            <input type="password" name="password" id="password" class="form-control" required>
-            </div>
             <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary">Send</button>
             </div>
-            <p class="text-center text-muted mt-3 mb-0">forgot your password?<a href="../forgotPassword/forgotPass.html"
-                class="fw-bold text-body">click here</a></p>
-            <div class="hidden"></div>
             <p class="text-center text-muted mt-3 mb-0">dont have an account?<a href="../signup/signup.html"
                 class="fw-bold text-body">signup</a></p>
         </form>
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.js"></script>
-<script src="index1.js"></script>
+<script src="forgotPass.js"></script>
 </html>
