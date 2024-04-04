@@ -8,6 +8,7 @@ const User = require('./model/users');
 const Expense = require('./model/expenses');
 const Order = require('./model/orders');
 const resetPassword = require('./model/resetPassword');
+const downloadFile = require('./model/download');
 
 
 const app = express();
@@ -22,6 +23,7 @@ const expenseRoutes = require('./routes/expense')
 const purchaseRoutes = require('./routes/purchase');
 const premiumRoutes = require('./routes/premium');
 const passwordRoutes = require('./routes/passwords');
+const reportsRouter = require("./routes/reports");
 
 app.use(express.json()); // app.use(bodyParser.json({extended: false})); 
 
@@ -30,6 +32,7 @@ app.use('/expense', expenseRoutes);
 app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumRoutes);
 app.use('/password',passwordRoutes);
+app.use("/reports", reportsRouter);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -39,6 +42,9 @@ Order.belongsTo(User);
 
 User.hasMany(resetPassword);
 resetPassword.belongsTo(User);
+
+User.hasMany(downloadFile, {foreignKey: "userId"});
+downloadFile.belongsTo(User, {foreignKey: "userId"})
 
 sequelize
 .sync()

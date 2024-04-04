@@ -4,11 +4,24 @@ const details = document.querySelector('.expense_details tbody');
 form.addEventListener('submit', async (event) =>{
     try{
     const token = localStorage.getItem('token');
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1;
+    const year = currentDate.getFullYear();
+
+    // add leading zeros to day and month if needed
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+
+    // create the date string in date-month-year format
+    const dateStr = `${formattedDay}-${formattedMonth}-${year}`;
+
     event.preventDefault();
     let expense_details = {
         amount:event.target.amount.value,
         description:event.target.description.value,
-        category:event.target.category.value
+        category:event.target.category.value,
+        date:dateStr
     };
     const response = await axios.post("http://localhost:3000/expense/add-expense",expense_details,{headers:{"Authorization":token}});
     //console.log(response);

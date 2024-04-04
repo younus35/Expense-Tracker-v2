@@ -15,12 +15,12 @@ exports.getExpense = async (req, res, next)=>{
 exports.postExpense = async (req, res, next)=>{
     const t = await sequelize.transaction();
     try{
-        const {amount,description,category} = req.body;
+        const {amount,description,category,date} = req.body;
         // Equivalent to:
         // const amount = req.body.amount;
         // const description = req.body.description;
         // const category = req.body.category;
-        const createdExpense = await Expense.create({amount,description,category,userId:req.user.id}, {transaction: t})//propetry name and value name are same
+        const createdExpense = await Expense.create({amount,description,category,date,userId:req.user.id}, {transaction: t})//propetry name and value name are same
         const totalExpense = Number(req.user.totalExpenses) + Number(amount);
         await User.update({
             totalExpenses: totalExpense

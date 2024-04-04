@@ -3,6 +3,8 @@ const leaderboard = document.querySelector('.leaderboard tbody');
 window.addEventListener('DOMContentLoaded', async ()=>{
     try{
        const token = localStorage.getItem('token');
+       const response1 = await axios.get("http://localhost:3000/expense/get-expenses",{headers:{"Authorization":token}})
+       if(response1.data.ispremiumuser){
        const response = await axios.get('http://localhost:3000/premium/show-leaderboard', {headers:{"Authorization":token}})
        const userLeaderBoardArray = response.data;
        //console.log(userLeaderBoardArray);
@@ -10,6 +12,9 @@ window.addEventListener('DOMContentLoaded', async ()=>{
             //should add the code here to show only for premium users
             showUserLeaderBoard(user);
         })  
+        }else {
+           alert("Buy premium to view");
+        }
     }
     catch(err){
         console.log(err);
