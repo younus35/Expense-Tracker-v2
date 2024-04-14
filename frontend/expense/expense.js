@@ -1,6 +1,12 @@
-const form = document.querySelector('form');
+const form = document.querySelector('.expense');
+const form1 = document.querySelector('.select_rows')
 const details = document.querySelector('.expense_details tbody');
 const pagination = document.querySelector('.pagination')
+
+form1.addEventListener('submit', (event)=>{
+    event.preventDefault();
+    localStorage.setItem('rows', event.target.rows.value);
+})
 
 form.addEventListener('submit', async (event) =>{
     try{
@@ -35,17 +41,16 @@ form.addEventListener('submit', async (event) =>{
 window.addEventListener('DOMContentLoaded', async ()=>{
     try{
     const page = 1;
+    const rows = localStorage.getItem('rows') || 5;
     const token = localStorage.getItem('token');
-    const response = await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}`,{headers:{"Authorization":token}})
+    const response = await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}&rows=${rows}`,{headers:{"Authorization":token}})
     if(response.data.ispremiumuser){
         const buyButton = document.getElementById('rzp-button');
         buyButton.textContent = 'Premium User';
         buyButton.disabled = true;
     }
     //console.log(response.data.expenses[0])
-    for(var i=0; i<response.data.expenses.length; i++){
-         showExpenseOnScreen(response.data.expenses[i]);
-    }
+    showExpenses(response.data.expenses);
     showPagination(response.data);
    }
    catch(err){
@@ -94,6 +99,13 @@ function showExpenseOnScreen(expense_details){
     // details.appendChild(newli)
 }
 
+function showExpenses(expenses){
+    details.innerHTML= '';
+    expenses.forEach((expense) => {
+        showExpenseOnScreen(expense);
+    });
+}
+
 function showPagination({
     currentPage,
     hasNextPage,
@@ -102,7 +114,7 @@ function showPagination({
     previousPage,
     lastPage
 }){
-   pagination.innerHtml= '';
+   pagination.innerHTML= '';
    if(hasPreviousPage){
     const btn2 = document.createElement('button')
     btn2.innerHTML = previousPage
@@ -111,7 +123,7 @@ function showPagination({
    }
    const btn1 = document.createElement('button')
    btn1.innerHTML=`${currentPage}`
-   btn1.addEventListener('click', () => getProducts(currentPage))
+   btn1.disabled = true;
    pagination.appendChild(btn1);
    if(hasNextPage){
     const btn3 = document.createElement('button')
@@ -123,11 +135,11 @@ function showPagination({
 
 async function getProducts(page){
     try{
-    const response = await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}`,{headers:{"Authorization":token}})
-    for(var i=0; i<response.data.expenses.length; i++){
-        showExpenseOnScreen(response.data.expenses[i]);
-    }
-   showPagination(response.data);
+    const rows = localStorage.getItem('rows') || 5;
+    const token = localStorage.getItem('token');
+    const response = await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}&rows=${rows}`,{headers:{"Authorization":token}})
+     showExpenses(response.data.expenses);
+     showPagination(response.data);
    }
    catch(err){
     console.log(err);

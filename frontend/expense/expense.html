@@ -20,7 +20,7 @@
         </div>
       </nav> 
     <div class="container">
-        <form>
+        <form class="expense">
             <label for="choose_expense_amount" class="form-label">Choose expense amount</label>
             <div class="input-group">
                 <div class="input-group-text">$</div>
@@ -58,6 +58,19 @@
     </div>
     <div class="pagination d-flex justify-content-center">
        
+    </div>
+    <hr>      
+    <div class="container">
+        <form class="select_rows">
+            <label for="rows">Number Of Rows</label>
+            <select name="rows">
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+            </select><br>
+            <button type="submit">Select</button>
+        </form>
     </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.js"></script>
