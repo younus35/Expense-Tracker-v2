@@ -1,11 +1,26 @@
 const Expense = require('../model/expenses');
 const User = require('../model/users');
 const sequelize = require('../util/database');
+const EXPENSE_PER_PAGE = 5;
 
 exports.getExpense = async (req, res, next)=>{
     try{
-         const expenses = await Expense.findAll({where:{userId: req.user.id}});
-         res.json({expenses, ispremiumuser:req.user.ispremiumuser});
+         const page = req.query.page || 1;
+         let totalExpenses = await Expense.count({where:{userId: req.user.id}});
+         const expenses = await Expense.findAll({
+            where:{userId: req.user.id},
+            offset:(page-1)*EXPENSE_PER_PAGE,
+            limit:EXPENSE_PER_PAGE
+        });
+        res.json({expenses, 
+            ispremiumuser:req.user.ispremiumuser,
+            currentPage: page,
+            hasNextPage: EXPENSE_PER_PAGE * page < totalExpenses,
+            nextPage: page +1,
+            hasPreviousPage: page -1,
+            previousPage: page-1,
+            lastPage: Math.ceil(totalExpenses/EXPENSE_PER_PAGE)
+        });
     }
     catch(err){
          console.log(err);
