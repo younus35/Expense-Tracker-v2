@@ -19,5 +19,10 @@
     "razorpay": "^2.9.2",
     "sequelize": "^6.37.1",
     "uuid": "^9.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   }
 }
