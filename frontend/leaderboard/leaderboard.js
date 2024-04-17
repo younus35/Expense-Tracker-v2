@@ -1,11 +1,12 @@
 const leaderboard = document.querySelector('.leaderboard tbody');
+const logoutBtn = document.getElementById("logout");
 
 window.addEventListener('DOMContentLoaded', async ()=>{
     try{
        const token = localStorage.getItem('token');
-       const response1 = await axios.get("http://localhost:3000/expense/get-expenses",{headers:{"Authorization":token}})
+       const response1 = await axios.get("http://3.87.83.144:3000/expense/get-expenses",{headers:{"Authorization":token}})
        if(response1.data.ispremiumuser){
-       const response = await axios.get('http://localhost:3000/premium/show-leaderboard', {headers:{"Authorization":token}})
+       const response = await axios.get('http://3.87.83.144:3000/premium/show-leaderboard', {headers:{"Authorization":token}})
        const userLeaderBoardArray = response.data;
        //console.log(userLeaderBoardArray);
         userLeaderBoardArray.forEach((user) =>{
@@ -35,3 +36,14 @@ function showUserLeaderBoard(user){
 
     leaderboard.appendChild(newRow);
 }
+
+async function logout() {
+    try {
+      localStorage.clear();
+      window.location.href = "../login/signin.html";
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+logoutBtn.addEventListener("click", logout);

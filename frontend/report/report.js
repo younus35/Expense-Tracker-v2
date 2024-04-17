@@ -9,11 +9,12 @@ const tbodyMonthly = document.getElementById("tbodyMonthlyId");
 const tfootMonthly = document.getElementById("tfootMonthlyId");
 
 const downloadBtn = document.getElementById("download");
+const logoutBtn = document.getElementById("logout");
 
 async function getDailyReport(e) {
     try {
       e.preventDefault();
-      //const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const date = new Date(dateInput.value);
       const formattedDate = `${date.getDate().toString().padStart(2, "0")}-${(
         date.getMonth() + 1
@@ -24,7 +25,7 @@ async function getDailyReport(e) {
   
       let totalAmount = 0;
       const res = await axios.post(
-        "http://localhost:3000/reports/dailyReports",
+        "http://3.87.83.144:3000/reports/dailyReports",
         {
           date: formattedDate,
         },
@@ -93,7 +94,7 @@ async function getDailyReport(e) {
         .padStart(2, "0")}`;
       let totalAmount = 0;
       const res = await axios.post(
-        "http://localhost:3000/reports/monthlyReports",
+        "http://3.87.83.144:3000/reports/monthlyReports",
         {
           month: formattedMonth,
         },
@@ -128,7 +129,6 @@ async function getDailyReport(e) {
         tr.appendChild(td2);
         tr.appendChild(td3);
       });
-  
       const tr = document.createElement("tr");
       tr.setAttribute("class", "trStyle");
       tfootMonthly.appendChild(tr);
@@ -152,21 +152,23 @@ async function getDailyReport(e) {
     }
   }
   
-dateShowBtn.addEventListener("click", async() =>{
+dateShowBtn.addEventListener("click", async(e) =>{
+   e.preventDefault();
       const token = localStorage.getItem("token");
-      const response1 = await axios.get("http://localhost:3000/expense/get-expenses",{headers:{"Authorization":token}})
+      const response1 = await axios.get("http://3.87.83.144:3000/expense/get-expenses",{headers:{"Authorization":token}})
        if(response1.data.ispremiumuser){
-      getDailyReport()
+      getDailyReport(e)
        }
        else{
         alert("Buy Premium");
        }
 });
-monthShowBtn.addEventListener("click", async() =>{
+monthShowBtn.addEventListener("click", async(e) =>{
+  e.preventDefault();
   const token = localStorage.getItem("token");
-  const response1 = await axios.get("http://localhost:3000/expense/get-expenses",{headers:{"Authorization":token}})
+  const response1 = await axios.get("http://3.87.83.144:3000/expense/get-expenses",{headers:{"Authorization":token}})
    if(response1.data.ispremiumuser){
-     getMonthlyReport();
+     getMonthlyReport(e);
    }
    else{
     alert("Buy Premium");
@@ -176,7 +178,7 @@ monthShowBtn.addEventListener("click", async() =>{
 downloadBtn.addEventListener("click", async () =>{
   try{
   const token = localStorage.getItem("token");
-  const response = await axios.get("http://localhost:3000/reports/download", {headers:{"Authorization":token}})
+  const response = await axios.get("http://3.87.83.144:3000/reports/download", {headers:{"Authorization":token}})
      if(response.status === 200){
          var a = document.createElement('a');
          a.href = response.data.fileUrl.Location;
@@ -190,3 +192,14 @@ downloadBtn.addEventListener("click", async () =>{
     console.log(err);
   }
  })
+
+ async function logout() {
+  try {
+    localStorage.clear();
+    window.location.href = "../login/signin.html";
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+logoutBtn.addEventListener("click", logout);

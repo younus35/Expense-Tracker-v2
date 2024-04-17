@@ -5,7 +5,7 @@ const sequelize = require('../util/database');
 exports.getExpense = async (req, res, next)=>{
     try{
          const page = parseInt(req.query.page) || 1;
-         const EXPENSE_PER_PAGE = parseInt(req.query.rows);
+         const EXPENSE_PER_PAGE = parseInt(req.query.rows) || 5;
          let totalExpenses = await Expense.count({where:{userId: req.user.id}});
          const expenses = await Expense.findAll({
             where:{userId: req.user.id},
