@@ -4,9 +4,9 @@ const logoutBtn = document.getElementById("logout");
 window.addEventListener('DOMContentLoaded', async ()=>{
     try{
        const token = localStorage.getItem('token');
-       const response1 = await axios.get("http://3.87.83.144:3000/expense/get-expenses",{headers:{"Authorization":token}})
+       const response1 = await axios.get("http://54.83.107.191:3000/expense/get-expenses",{headers:{"Authorization":token}})
        if(response1.data.ispremiumuser){
-       const response = await axios.get('http://3.87.83.144:3000/premium/show-leaderboard', {headers:{"Authorization":token}})
+       const response = await axios.get('http://54.83.107.191:3000/premium/show-leaderboard', {headers:{"Authorization":token}})
        const userLeaderBoardArray = response.data;
        //console.log(userLeaderBoardArray);
         userLeaderBoardArray.forEach((user) =>{
