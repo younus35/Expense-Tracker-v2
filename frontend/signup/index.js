@@ -8,7 +8,7 @@ form.addEventListener('submit',(event)=>{
          email:event.target.email.value,
          password:event.target.password.value
     }
-    axios.post("http://54.83.107.191:3000/user/signup",user_details)
+    axios.post("http://54.91.33.84:3000/user/signup",user_details)
     .then(res => {
         if(res.data.message == 'Email already exists'){
             const message = document.querySelector('.hidden');

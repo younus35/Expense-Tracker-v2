@@ -28,7 +28,7 @@ exports.forgotPassword = async (req, res, next) =>{
             from: "picwork35@gmail.com",
             to: email,
             subject: "Expense Tracker Reset lINK",
-            html: `<p>Click <a href="http://54.83.107.191:3000/password/resetpassword/${requestId}">here</a> to reset your password.</p>`,
+            html: `<p>Click <a href="http://54.91.33.84:3000/password/resetpassword/${requestId}">here</a> to reset your password.</p>`,
           });
         return res.status(202).json({
            message:

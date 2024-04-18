@@ -7,7 +7,7 @@ form.addEventListener('submit', async (event) =>{
          email:event.target.email.value,
          password:event.target.password.value
        }
-       const response = await axios.post('http://54.83.107.191:3000/user/signin',login_details)
+       const response = await axios.post('http://54.91.33.84:3000/user/signin',login_details)
        if(response.status === 200){
           alert(response.data.message)
           localStorage.setItem('token', response.data.token);
