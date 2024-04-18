@@ -50,6 +50,7 @@ app.use('/password',passwordRoutes);
 app.use("/reports", reportsRouter);
 
 app.use((req, res) =>{
+    console.log('url is ', req.url);
     res.sendFile(path.join(__dirname, `frontend/${req.url}`))
 })
 
