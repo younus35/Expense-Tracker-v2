@@ -1,6 +1,7 @@
 const Razorpay = require('razorpay');
 const Order = require('../model/orders');
 const userController = require('./user');
+const User = require('../model/users');
 
 exports.purchasepremium = async (req , res, next) =>{
    try{
@@ -14,9 +15,15 @@ exports.purchasepremium = async (req , res, next) =>{
             throw new Error(JSON.stringify(err));
         }
         //Order.create({orderid: order.id, status: 'PENDING',userId:req.user.id})
-        req.user.createOrder({ orderid: order.id, status: 'PENDING'}).then(() => {
-            return res.status(201).json({ order, key_id : rzp.key_id});
 
+        // req.user.createOrder({ orderid: order.id, status: 'PENDING'}).then(() => {
+        //     return res.status(201).json({ order, key_id : rzp.key_id});
+
+        // }).catch(err => {
+        //     throw new Error(err)
+        // })
+        Order.create({ orderid: order.id, status: 'PENDING', userId:req.user._id}).then(() =>{
+            return res.status(201).json({ order, key_id : rzp.key_id});
         }).catch(err => {
             throw new Error(err)
         })
@@ -30,11 +37,15 @@ exports.purchasepremium = async (req , res, next) =>{
 
 exports.updateTransactionStatus = async (req, res ) => {
     try {
-        const userId = req.user.id;
+        // const userId = req.user.id;
+        const userId = req.user._id;
         const { payment_id, order_id} = req.body;
-        const order  = await Order.findOne({where : {orderid : order_id}})
-        const promise1 =  order.update({ paymentid: payment_id, status: 'SUCCESSFUL'}) 
-        const promise2 =  req.user.update({ ispremiumuser: true }) 
+        // const order  = await Order.findOne({where : {orderid : order_id}})
+        const order = await Order.findOne({ orderid: order_id });
+        // const promise1 =  order.update({ paymentid: payment_id, status: 'SUCCESSFUL'}) 
+        const promise1 = order.updateOne({ paymentid: payment_id, status: 'SUCCESSFUL' });
+        // const promise2 =  req.user.update({ ispremiumuser: true })
+        const promise2 = User.findByIdAndUpdate(userId, { ispremiumuser: true }); 
 
         Promise.all([promise1, promise2]).then(()=> {
             return res.status(202).json({sucess: true, message: "Transaction Successful", token: userController.generateAccessToken(userId, true)});

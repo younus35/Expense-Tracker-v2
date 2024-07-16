@@ -9,8 +9,9 @@ exports.forgotPassword = async (req, res, next) =>{
         const email = req.body.email;
         const requestId = uuidv4();
 
-        const recepientEmail = await User.findOne({where:{email:email}});
-         console.log(recepientEmail.id);
+        // const recepientEmail = await User.findOne({where:{email:email}});
+        const recepientEmail = await User.findOne({email:email});
+         console.log(recepientEmail._id);
     
         if (!recepientEmail) {
             return res
@@ -19,16 +20,16 @@ exports.forgotPassword = async (req, res, next) =>{
           }
         
         await ResetPassword.create({
-            id: requestId,
+            _id: requestId,
             isActive: true,
-            userId: recepientEmail.id
+            userId: recepientEmail._id
           });
           
-          const info = await transporter.sendMail({
+           await transporter.sendMail({
             from: "picwork35@gmail.com",
             to: email,
             subject: "Expense Tracker Reset lINK",
-            html: `<p>Click <a href="http://44.220.155.153:3000/password/resetpassword/${requestId}">here</a> to reset your password.</p>`,
+            html: `<p>Click <a href="http://localhost:3000/password/resetpassword/${requestId}">here</a> to reset your password.</p>`,
           });
         return res.status(202).json({
            message:
@@ -45,10 +46,12 @@ exports.resetpassword = async (req, res) => {
     try{
         const id = req.params.resetpasswordid;
         //console.log(id);
-        const forgotpasswordrequest = await ResetPassword.findOne({ where :{ id }})
+        const forgotpasswordrequest = await ResetPassword.findOne({_id:id})
         if(forgotpasswordrequest){
             if(forgotpasswordrequest.isActive){
-            forgotpasswordrequest.update({ isActive: false});
+            // forgotpasswordrequest.update({ isActive: false});
+            forgotpasswordrequest.isActive = false;
+            await forgotpasswordrequest.save();
            return res.status(200).send(`<html>
                                     <script>
                                         function formsubmitted(e){
@@ -80,7 +83,6 @@ exports.updatePassword = async(req, res, next) =>{
         const { newpassword } = req.query;
         const resetpasswordid  = req.params.id;
         const userIdObj = await ResetPassword.findOne({ where : { id: resetpasswordid }, attributes: ["userId"],})
-        
         const userInstance = await User.findOne({
          where: { id: userIdObj.userId },
         });

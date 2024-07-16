@@ -7,15 +7,18 @@ exports.getUserLeaderBoard = async (req, res, next)=>{
     // console.log(req.user.ispremiumuser)
     try{
         // if(req.user.ispremiumuser == true){
-        const userLeaderBoardDetails = await User.findAll({ //insted of findAll() where it gives all attributes use the below
-            // attributes:['id', 'name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'total']],
-            // include: [{
-            //     model: Expense,
-            //     attributes:[]
-            // }],
-            // group:['user.id'],
-            order:[['totalExpenses','DESC']]
-        });
+        // const userLeaderBoardDetails = await User.findAll({ //insted of findAll() where it gives all attributes use the below
+        //     // attributes:['id', 'name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'total']],
+        //     // include: [{
+        //     //     model: Expense,
+        //     //     attributes:[]
+        //     // }],
+        //     // group:['user.id'],
+        //     order:[['totalExpenses','DESC']]
+        // });
+        const userLeaderBoardDetails = await User.find({})
+        .sort({ totalExpenses: -1 })  // Sort by totalExpenses in descending order
+        .select('name totalExpenses'); // Only select the fields you need
         // const userTotalExpenses = await Expense.findAll({
         //     attributes: ['userId', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'total']],
         //     group:['userid'],

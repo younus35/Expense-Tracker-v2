@@ -28,14 +28,13 @@ function uploadToS3(data, filename){
   
 }
 
-
 exports.dailyReports = async (req, res, next) => {
     try {
       const date = req.body.date;
 
-      const expenses = await Expense.findAll({
-        where: { date:date, userId: req.user.id },
-      });
+      const expenses = await Expense.find(
+         {date:date, userId: req.user._id},
+      );
       return res.send(expenses);
     } catch (error) {
       console.log(error);
@@ -46,14 +45,9 @@ exports.dailyReports = async (req, res, next) => {
     try {
       const month = req.body.month;
       console.log(month);
-      const expenses = await Expense.findAll({
-        where: {
-          date: {
-            [Op.like]: `%-${month}-%`,
-          },
-          userId: req.user.id,
-        },
-        raw: true,
+      const expenses = await Expense.find({
+        date: { $regex: `-${month}-`, $options: 'i' }, // For case-insensitive match
+        userId: req.user._id
       });
       return res.send(expenses);
     } catch (error) {
@@ -63,15 +57,16 @@ exports.dailyReports = async (req, res, next) => {
 
 exports.downloadReports = async (req, res, next) =>{
   try{
-    const userInstance = await User.findByPk(req.user.id);
+    const userInstance = await User.findById(req.user._id);
     if(userInstance.ispremiumuser){
-       const expenses = await req.user.getExpenses();
+       const expenses = await userInstance.getExpenses();
        const stringifiedExpenses = JSON.stringify(expenses);
-       const userId = req.user.id;
+       const userId = req.user._id;
        const filename = `Expense${userId}/${new Date()}.txt`;
        const fileUrl = await uploadToS3(stringifiedExpenses, filename);
 
-       await userInstance.createDownloadFile({fileUrl:fileUrl.Location});
+      //  await userInstance.createDownloadFile({fileUrl:fileUrl.Location});
+      await DownloadFile.create({ fileUrl: fileUrl.Location, userId: userInstance._id });
        res.status(200).json({fileUrl})
   }
 }

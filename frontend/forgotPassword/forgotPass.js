@@ -4,7 +4,7 @@ form.addEventListener('submit', async (event) =>{
     try{
     event.preventDefault();
     const mail_details = {email: event.target.email.value};
-    const response = await axios.post("http://44.220.155.153:3000/password/forgotpassword",mail_details);
+    const response = await axios.post("http://localhost:3000/password/forgotpassword",mail_details);
        if(response.status === 202){
         const message = document.querySelector('.hidden');
         message.innerHTML = `<p class="text-center text-success mt-2 mb-0">Mail send successfully</p>`;

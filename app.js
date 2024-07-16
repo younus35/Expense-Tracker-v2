@@ -4,15 +4,15 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 // const morgan = require('morgan');
-const fs = require('fs');
+// const fs = require('fs');
+const mongoose = require('mongoose');
+// const sequelize = require('./util/database');
 
-const sequelize = require('./util/database');
-
-const User = require('./model/users');
-const Expense = require('./model/expenses');
-const Order = require('./model/orders');
-const resetPassword = require('./model/resetPassword');
-const downloadFile = require('./model/download');
+// const User = require('./model/users');
+// const Expense = require('./model/expenses');
+// const Order = require('./model/orders');
+// const resetPassword = require('./model/resetPassword');
+// const downloadFile = require('./model/download');
 
 
 const app = express();
@@ -49,26 +49,34 @@ app.use('/premium', premiumRoutes);
 app.use('/password',passwordRoutes);
 app.use("/reports", reportsRouter);
 
-app.use((req, res) =>{
-    console.log('url is ', req.url);
-    res.sendFile(path.join(__dirname, `frontend/${req.url}`))
-})
+// app.use((req, res) =>{
+//     console.log('url is ', req.url);
+//     res.sendFile(path.join(__dirname, `frontend/${req.url}`))
+// })
 
-User.hasMany(Expense);
-Expense.belongsTo(User);
+// User.hasMany(Expense);
+// Expense.belongsTo(User);
 
-User.hasMany(Order);
-Order.belongsTo(User);
+// User.hasMany(Order);
+// Order.belongsTo(User);
 
-User.hasMany(resetPassword);
-resetPassword.belongsTo(User);
+// User.hasMany(resetPassword);
+// resetPassword.belongsTo(User);
 
-User.hasMany(downloadFile, {foreignKey: "userId"});
-downloadFile.belongsTo(User, {foreignKey: "userId"})
+// User.hasMany(downloadFile, {foreignKey: "userId"});
+// downloadFile.belongsTo(User, {foreignKey: "userId"})
 
-sequelize
-.sync()
+// sequelize
+// .sync()
+// .then(result =>{
+//     app.listen(process.env.PORT || 3000);
+// })
+// .catch(err => console.log(err));
+
+mongoose.connect('mongodb+srv://younuscode:y24kUUeY@cluster0.q96wx2k.mongodb.net/ExpenseTracker?retryWrites=true&w=majority&appName=Cluster0')
 .then(result =>{
-    app.listen(process.env.PORT || 3000);
+   app.listen(3000);
 })
-.catch(err => console.log(err));
+.catch(err =>{
+  console.log(err);
+})

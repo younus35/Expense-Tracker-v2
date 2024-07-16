@@ -9,11 +9,17 @@ exports.postUser = async (req, res, next) =>{
     const password = req.body.password;
     const saltrounds = 10;
     const hash = await bcrypt.hash(password, saltrounds);
-        const createdUser = await User.create({
+        // const createdUser = await User.create({
+        //     name: user,
+        //     email: email,
+        //     password: hash
+        // })
+        const createdUser = new User({
             name: user,
             email: email,
             password: hash
         })
+        await createdUser.save();
         res.json(createdUser);
         }
     catch(err){
@@ -33,7 +39,9 @@ exports.checkUser = async (req, res, next) =>{
     try{
        const email = req.body.email;
        const password = req.body.password;
-       const response = await User.findAll({where:{email}})//we can also write { email: email } but as both are same so we wrote it like that
+    // const response = await User.findAll({where:{email}})//we can also write { email: email } but as both are same so we wrote it like that
+       const response = await User.find({email: email})
+    // console.log(response);
        if(response.length > 0){
         const match = await bcrypt.compare(password, response[0].password);  
            if(match){
