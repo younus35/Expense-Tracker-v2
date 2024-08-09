@@ -1,5 +1,5 @@
 const Expense = require("../model/expenses");
-const { Op } = require("sequelize");
+// const { Op } = require("sequelize");
 const AWS = require('aws-sdk');
 const User = require("../model/users");
 
@@ -62,21 +62,21 @@ exports.dailyReports = async (req, res, next) => {
     }
   };
 
-// exports.downloadReports = async (req, res, next) =>{
-//   try{
-//     const userInstance = await User.findByPk(req.user.id);
-//     if(userInstance.ispremiumuser){
-//        const expenses = await req.user.getExpenses();
-//        const stringifiedExpenses = JSON.stringify(expenses);
-//        const userId = req.user.id;
-//        const filename = `Expense${userId}/${new Date()}.txt`;
-//        const fileUrl = await uploadToS3(stringifiedExpenses, filename);
+exports.downloadReports = async (req, res, next) =>{
+  try{
+    const userInstance = await User.findByPk(req.user.id);
+    if(userInstance.ispremiumuser){
+       const expenses = await req.user.getExpenses();
+       const stringifiedExpenses = JSON.stringify(expenses);
+       const userId = req.user.id;
+       const filename = `Expense${userId}/${new Date()}.txt`;
+       const fileUrl = await uploadToS3(stringifiedExpenses, filename);
 
-//        await userInstance.createDownloadFile({fileUrl:fileUrl.Location});
-//        res.status(200).json({fileUrl})
-//   }
-// }
-//   catch(err){
-//     console.log(err);
-//   }
-// }
+       await userInstance.createDownloadFile({fileUrl:fileUrl.Location});
+       res.status(200).json({fileUrl})
+  }
+}
+  catch(err){
+    console.log(err);
+  }
+}

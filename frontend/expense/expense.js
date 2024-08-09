@@ -31,7 +31,7 @@ form.addEventListener('submit', async (event) =>{
         category:event.target.category.value,
         date:dateStr
     };
-    const response = await axios.post("http://3.87.83.144:3000/expense/add-expense",expense_details,{headers:{"Authorization":token}});
+    const response = await axios.post("http://localhost:3000/expense/add-expense",expense_details,{headers:{"Authorization":token}});
     //console.log(response);
     showExpenseOnScreen(response.data);
    }
@@ -44,7 +44,7 @@ window.addEventListener('DOMContentLoaded', async ()=>{
     const page = 1;
     const rows = localStorage.getItem('rows') || 5;
     const token = localStorage.getItem('token');
-    const response = await axios.get(`http://3.87.83.144:3000/expense/get-expenses?page=${page}&rows=${rows}`,{headers:{"Authorization":token}})
+    const response = await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}&rows=${rows}`,{headers:{"Authorization":token}})
     if(response.data.ispremiumuser){
         const buyButton = document.getElementById('rzp-button');
         buyButton.textContent = 'Premium User';
@@ -82,7 +82,7 @@ function showExpenseOnScreen(expense_details){
     deleteButton.onclick = async () =>{
        try{
         const token = localStorage.getItem('token');
-         await axios.delete(`http://3.87.83.144:3000/expense/delete-expense/${expense_details.id}`,{headers:{"Authorization":token}})
+         await axios.delete(`http://localhost:3000/expense/delete-expense/${expense_details.id}`,{headers:{"Authorization":token}})
            details.removeChild(newRow);
        }
        catch(err){
@@ -138,7 +138,7 @@ async function getProducts(page){
     try{
     const rows = localStorage.getItem('rows') || 5;
     const token = localStorage.getItem('token');
-    const response = await axios.get(`http://3.87.83.144:3000/expense/get-expenses?page=${page}&rows=${rows}`,{headers:{"Authorization":token}})
+    const response = await axios.get(`http://localhost:3000/expense/get-expenses?page=${page}&rows=${rows}`,{headers:{"Authorization":token}})
      showExpenses(response.data.expenses);
      showPagination(response.data);
    }
@@ -150,12 +150,12 @@ async function getProducts(page){
 document.getElementById('rzp-button').onclick = async (e) =>{
     try{
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://3.87.83.144:3000/purchase/premiumship', {headers:{"Authorization":token}});
+    const response = await axios.get('http://localhost:3000/purchase/premiumship', {headers:{"Authorization":token}});
     var options = {
         "key":response.data.key_id,
         "order_id":response.data.order.id,
         "handler": async (response) =>{
-            const res = await axios.post("http://3.87.83.144:3000/purchase/update-transaction",{
+            const res = await axios.post("http://localhost:3000/purchase/update-transaction",{
                 order_id:options.order_id,
                 payment_id:response.razorpay_payment_id,
             },{headers:{"Authorization":token}})

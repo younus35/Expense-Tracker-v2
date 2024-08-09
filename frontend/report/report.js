@@ -25,7 +25,7 @@ async function getDailyReport(e) {
   
       let totalAmount = 0;
       const res = await axios.post(
-        "http://3.87.83.144:3000/reports/dailyReports",
+        "http://localhost:3000/reports/dailyReports",
         {
           date: formattedDate,
         },
@@ -94,7 +94,7 @@ async function getDailyReport(e) {
         .padStart(2, "0")}`;
       let totalAmount = 0;
       const res = await axios.post(
-        "http://3.87.83.144:3000/reports/monthlyReports",
+        "http://localhost:3000/reports/monthlyReports",
         {
           month: formattedMonth,
         },
@@ -155,7 +155,7 @@ async function getDailyReport(e) {
 dateShowBtn.addEventListener("click", async(e) =>{
    e.preventDefault();
       const token = localStorage.getItem("token");
-      const response1 = await axios.get("http://3.87.83.144:3000/expense/get-expenses",{headers:{"Authorization":token}})
+      const response1 = await axios.get("http://localhost:3000/expense/get-expenses",{headers:{"Authorization":token}})
        if(response1.data.ispremiumuser){
       getDailyReport(e)
        }
@@ -166,7 +166,7 @@ dateShowBtn.addEventListener("click", async(e) =>{
 monthShowBtn.addEventListener("click", async(e) =>{
   e.preventDefault();
   const token = localStorage.getItem("token");
-  const response1 = await axios.get("http://3.87.83.144:3000/expense/get-expenses",{headers:{"Authorization":token}})
+  const response1 = await axios.get("http://localhost:3000/expense/get-expenses",{headers:{"Authorization":token}})
    if(response1.data.ispremiumuser){
      getMonthlyReport(e);
    }
@@ -178,7 +178,7 @@ monthShowBtn.addEventListener("click", async(e) =>{
 downloadBtn.addEventListener("click", async () =>{
   try{
   const token = localStorage.getItem("token");
-  const response = await axios.get("http://3.87.83.144:3000/reports/download", {headers:{"Authorization":token}})
+  const response = await axios.get("http://localhost:3000/reports/download", {headers:{"Authorization":token}})
      if(response.status === 200){
          var a = document.createElement('a');
          a.href = response.data.fileUrl.Location;

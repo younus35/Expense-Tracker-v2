@@ -13,7 +13,8 @@ router.post(
     userAuthentication.authenticate,
     reportsController.monthlyReports
   );
+
 router.get("/download", userAuthentication.authenticate,reportsController.downloadReports);
 
   
-  module.exports = router;
+module.exports = router;
